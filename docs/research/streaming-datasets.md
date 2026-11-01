@@ -8,7 +8,7 @@ Research for [issue #7](https://github.com/gdevenyi/open_asr_leaderboard/issues/
 - **Upstream word timing exists for four sets, with limits:**
   - AMI: complete in the 16 word files checked, and it joins to our clips.
   - LibriSpeech: third-party Montreal Forced Aligner (MFA) alignments.
-  - Earnings-22: Rev's force-aligned references, but only 72% of tokens have times, and 2 of the 6 AA calls have almost none.
+  - Earnings-22: Rev's force-aligned references, but only 72% of tokens have times, and 2 of the 6 AA calls are at 1% and 21%.
   - CORAAL: MFA alignments for 4 of 8 components, from an older corpus version.
 - **The rest need forced alignment:** Earnings-21, SPGISpeech, GigaSpeech, VoxPopuli and URGENT2024. MFA is the most accurate option in the one head-to-head comparison found. NeMo Forced Aligner (NFA) is the practical choice for hour-long files.
 - **Finalization latency may not need word timing.** Artificial Analysis measures it from a Silero VAD end of speech, not from word times. That is a question for #9.
@@ -89,7 +89,7 @@ The viewer does not give usable totals for these sets, and the obvious fallbacks
 | ami_cleaned | Segment span in `id` | Yes: AMI manual annotations | **Usable** |
 | librispeech | None | Third-party MFA | Usable, unofficial |
 | Earnings-22 | None | Rev force-aligned, partial | Partial |
-| Earnings22-Cleaned-AA-chunked | Chunk start and end, no per-chunk text | Rev force-aligned, partial and for different references | Weak: 2 of 6 calls have almost no times |
+| Earnings22-Cleaned-AA-chunked | Chunk start and end, no per-chunk text | Rev force-aligned, partial and for different references | Weak: 2 of 6 calls are at 1% and 21% of tokens |
 | CORAAL | None | Utterance level, plus MFA for DCA, DCB, PRV, ROC | Partial |
 | Earnings-21 | None | None | Needs alignment |
 | spgispeech | None | None released | Needs alignment |
