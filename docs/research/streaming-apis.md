@@ -46,7 +46,7 @@ These are suggestions for the later tickets, not decisions.
 1. **Pacing has to be real time, and runs cost wall-clock time.**
    - Meta closes with `1008` for "backlog or below-real-time ingress" ([close codes](https://dev.meta.ai/docs/api-reference/voice/realtime)).
    - AssemblyAI warns that sending in a tight loop "can produce inconsistent Turn messages" ([API spec](https://assemblyai.com/docs/streaming/api-spec/streaming-websocket.md)).
-   - Only Rev.ai says outright that faster-than-real-time audio is processed and catches up ([requests](https://docs.rev.ai/api/streaming/requests/)).
+   - Two vendors explicitly permit faster-than-real-time audio. Rev.ai says it is processed and catches up ([requests](https://docs.rev.ai/api/streaming/requests/)), and AssemblyAI allows it but throttles at ~1.25x ([message sequence](https://assemblyai.com/docs/streaming/message-sequence.md)). Speechmatics warns it can end in a closed connection ([API reference](https://docs.speechmatics.com/api-ref/realtime-transcription-websocket)). The rest state no rule on the pages read.
    - Billing can follow the same clock. AssemblyAI bills `session_duration_seconds` ([message sequence](https://assemblyai.com/docs/streaming/message-sequence.md)), Soniox charges "for the **full stream duration,** not just the audio processed" ([manual finalization](https://docs.soniox.com/stt/rt/manual-finalization)), and Rev.ai bills the larger of audio and stream duration ([streaming overview](https://docs.rev.ai/api/streaming/)). So trailing silence and slow draining cost money.
 2. **Finalization latency must come from the client's receive clock.** Reported timestamps locate text in the audio, not when it was produced. The exceptions are thin:
    - Gladia puts `created_at` on messages, in wall-clock form but undefined ([quickstart](https://docs.gladia.io/chapters/live-stt/quickstart.md)).
@@ -221,7 +221,7 @@ Source: [live transcription](https://ai.google.dev/gemini-api/docs/live-api/live
 
 | Topic | Documented behaviour |
 |---|---|
-| Input and pacing | PCM16 16 kHz; "chunks of 100ms (1,024 to 2,048 frames)", which doesn't compute at 16 kHz (100 ms is 1,600 samples). `send_realtime_input` favours responsiveness over ordering ([Live guide](https://ai.google.dev/gemini-api/docs/live-guide)). No rate rule. |
+| Input and pacing | PCM16 16 kHz; "chunks of 100ms (1,024 to 2,048 frames)". `send_realtime_input` favours responsiveness over ordering ([Live guide](https://ai.google.dev/gemini-api/docs/live-guide)). No rate rule. |
 | Partials and finals | `interim_input_transcription`, then `input_transcription`, "authoritative". `SMART` mode cleans the final; `VERBATIM` is default. |
 | Timestamps and clock | "Word-level timestamps are not supported over the Live API." The page claims "utterance-level timestamps", but the response field table lists no timing field. |
 | Finalization | Hybrid VAD: `audio_stream_end` is "an immediate turn finalization prompt". Manual VAD: `activity_start`, `activity_end`. |
